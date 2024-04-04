@@ -54,7 +54,8 @@ headers.append(
     Element("MessageID", ns=NS_WSA).setText("urn:uuid:%s" % generate_messageid())
 )
 action = "http://www.rechtspraak.nl/namespaces/cir01/Ping"
-headers.append(Element("Action", ns=NS_WSA).setText(action))
+# headers.append(Element("Action", ns=NS_WSA).setText(action))
+headers.append(Element("Action", ns=NS_WSA))
 
 client.set_options(soapheaders=headers)
 
@@ -62,6 +63,9 @@ ping_response = client.service.Ping()
 search_by_date_response = client.service.searchByDate(
     "2024-04-01T00:00:00", "41", "Uitspraken faillissement"
 )
-
-
+case_id = "15.nho.24.94.F.1300.1.24"
+case_response = client.service.getCase(case_id)
+# print(client)
+print(case_response)
+# print(search_by_date_response)
 # search_by_date_response = client.service
