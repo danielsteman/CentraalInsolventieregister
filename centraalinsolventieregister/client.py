@@ -12,6 +12,9 @@ from centraalinsolventieregister.rspublic_ws_insolvency_requests import (
     InstantieRechtbankCode,
     SearchByDatePubType,
 )
+from centraalinsolventieregister.rspublic_ws_insolvency_response_list01 import (
+    PublicatieLijst,
+)
 
 load_dotenv()
 
@@ -78,7 +81,7 @@ class CIRClient:
 
     def get_cases_by_date(
         self, date: str, court: InstantieRechtbankCode, pub_type: SearchByDatePubType
-    ):
+    ) -> PublicatieLijst:
         """
         Params:
             date: "2024-04-01T00:00:00"
@@ -86,7 +89,22 @@ class CIRClient:
             type: "Uitspraken faillissement"
         """
         res = self.client.service.searchByDate(date, court.value, pub_type.value)
-        return res
+        res = res.publicatieLijst
+        try:
+            exception = res.exceptie.value
+            return PublicatieLijst(exceptie=exception)
+        except AttributeError:
+            exception = None
+
+        publication_feature = res.publicatieKenmerk
+        extraction_date = res._extractiedatum
+
+        publication_list = PublicatieLijst(
+            exceptie=exception,
+            publicatie_kenmerk=publication_feature,
+            extractiedatum=extraction_date,
+        )
+        return publication_list
 
     def get_case(self, case_id: str):
         """
@@ -95,14 +113,3 @@ class CIRClient:
         """
         res = self.client.service.getCase(case_id)
         return res
-
-
-client = CIRClient()
-res = client.get_cases_by_date(
-    "2024-04-01T00:00:00",
-    InstantieRechtbankCode.ROTTERDAM2,
-    SearchByDatePubType.UITSPRAKEN_FAILLISSEMENT,
-)
-print(res)
-# court_list = client.get_court_list()
-# print(court_list)
