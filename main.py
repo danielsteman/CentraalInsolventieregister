@@ -1,10 +1,11 @@
-from suds.client import Client
-from suds.wsse import Security, UsernameToken
-from suds.sax.element import Element
-from suds.sax.attribute import Attribute
-import uuid
-from dotenv import load_dotenv
 import os
+import uuid
+
+from dotenv import load_dotenv
+from suds.client import Client
+from suds.sax.attribute import Attribute
+from suds.sax.element import Element
+from suds.wsse import Security, UsernameToken
 
 load_dotenv()
 
@@ -92,7 +93,9 @@ print(court_list)
 #     )
 # )
 # headers.append(Element("ReplyTo", ns=NS_WSA).insert(addr).append(MUST_UNDERSTAND))
-# headers.append(Element("To", ns=NS_WSA).setText(WEBSERVICE_URL).append(MUST_UNDERSTAND))
+# headers.append(Element("To", ns=NS_WSA).setText(WEBSERVICE_URL).append(
+#   MUST_UNDERSTAND
+# ))
 # headers.append(addr)
 # headers.append(
 #     Element("MessageID", ns=NS_WSA).setText("urn:uuid:%s" % generate_messageid())

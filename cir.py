@@ -4,26 +4,24 @@
 CIR python example
 """
 
+import configparser
 import logging
+import os.path
 import random
 import string
-import configparser
-import os.path
 import sys
 
 # from suds import MethodNotFound
 from suds.client import Client
-from suds.wsse import Security, UsernameToken
-from suds.sax.element import Element
 from suds.sax.attribute import Attribute
-from suds.xsd.sxbasic import Import
+from suds.sax.element import Element
+from suds.wsse import Security, UsernameToken
 
 WEBSERVICE_URL = "http://webservice.rechtspraak.nl/cir.asmx"
 NS_WSA = ("wsa", "http://schemas.xmlsoap.org/ws/2004/08/addressing")
 MUST_UNDERSTAND = Attribute("SOAP-ENV:mustUnderstand", "true")
 
 if not os.path.isfile("credentials.ini"):
-
     msg = (
         "First create or request credentials at",
         ":\nhttps://www.rechtspraak.nl/Uitspraken-en-Registers/centraal-insolventieregister/Pages/Aanvraag-Autorisatie.aspx",
@@ -49,7 +47,9 @@ def main():
 
     # method = client.service.GetLastUpdate()
     # method = client.service.searchModifiedSince("2021-05-01T00:00:00")
-    # client.service.searchByDate("2014-07-14T00:00:00", "01", "Uitspraken faillissement")
+    # client.service.searchByDate(
+    #   "2014-07-14T00:00:00", "01", "Uitspraken faillissement"
+    # )
 
     method = get_method(client, "Ping")
     # 2021-05-31
