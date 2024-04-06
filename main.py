@@ -1,5 +1,6 @@
 import os
 import uuid
+from typing import Literal
 
 from dotenv import load_dotenv
 from suds.client import Client
@@ -17,6 +18,9 @@ MUST_UNDERSTAND = Attribute("SOAP-ENV:mustUnderstand", "true")
 
 USERNAME = os.environ["USERNAME"]
 PASSWORD = os.environ["PASSWORD"]
+
+
+PubType = Literal["Uitspraken faillissement"]
 
 
 class CIRClient:
@@ -67,52 +71,27 @@ class CIRClient:
     def get_court_list(self):
         return
 
+    def get_cases_by_date(self, date: str, court: int, pub_type: PubType):
+        """
+        Params:
+            date: "2024-04-01T00:00:00"
+            court: 41
+            type: "Uitspraken faillissement"
+        """
+        res = client.service.searchByDate(date, court, pub_type)
+        return res
+
+    def get_case(self, case_id: str):
+        """
+        Params:
+            case_id: "15.nho.24.94.F.1300.1.24"
+        """
+        res = client.service.getCase(case_id)
+        return res
+
 
 client = CIRClient()
 res = client.ping()
 print(res)
 court_list = client.get_court_list()
 print(court_list)
-
-
-# client = Client(WEBSERVICE_URL)
-
-# sec = Security()
-# token = UsernameToken(USERNAME, PASSWORD)
-# token.setnonce()
-# sec.tokens.append(token)
-# client.set_options(wsse=sec)
-
-# headers = []
-# addr = Element("Address", ns=NS_WSA).setText(
-#     "http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous"
-# )
-# headers.append(
-#     Element("Element").addPrefix(
-#         p="SOAP-ENC", u="http://www.w3.org/2003/05/soap-encoding"
-#     )
-# )
-# headers.append(Element("ReplyTo", ns=NS_WSA).insert(addr).append(MUST_UNDERSTAND))
-# headers.append(Element("To", ns=NS_WSA).setText(WEBSERVICE_URL).append(
-#   MUST_UNDERSTAND
-# ))
-# headers.append(addr)
-# headers.append(
-#     Element("MessageID", ns=NS_WSA).setText("urn:uuid:%s" % generate_messageid())
-# )
-# action = "http://www.rechtspraak.nl/namespaces/cir01/Ping"
-# # headers.append(Element("Action", ns=NS_WSA).setText(action))
-# headers.append(Element("Action", ns=NS_WSA))
-
-# client.set_options(soapheaders=headers)
-
-# ping_response = client.service.Ping()
-# search_by_date_response = client.service.searchByDate(
-#     "2024-04-01T00:00:00", "41", "Uitspraken faillissement"
-# )
-# case_id = "15.nho.24.94.F.1300.1.24"
-# case_response = client.service.getCase(case_id)
-# # print(client)
-# print(case_response)
-# # print(search_by_date_response)
-# # search_by_date_response = client.service
