@@ -8,7 +8,7 @@ from suds.sax.attribute import Attribute
 from suds.sax.element import Element
 from suds.wsse import Security, UsernameToken
 
-from generated.rspublic_ws_insolvency_requests import (
+from centraalinsolventieregister.rspublic_ws_insolvency_requests import (
     InstantieRechtbankCode,
     SearchByDatePubType,
 )
@@ -85,7 +85,7 @@ class CIRClient:
             court: "41"
             type: "Uitspraken faillissement"
         """
-        res = client.service.searchByDate(date, court.value, pub_type.value)
+        res = self.client.service.searchByDate(date, court.value, pub_type.value)
         return res
 
     def get_case(self, case_id: str):
@@ -93,12 +93,16 @@ class CIRClient:
         Params:
             case_id: "15.nho.24.94.F.1300.1.24"
         """
-        res = client.service.getCase(case_id)
+        res = self.client.service.getCase(case_id)
         return res
 
 
 client = CIRClient()
-res = client.ping()
+res = client.get_cases_by_date(
+    "2024-04-01T00:00:00",
+    InstantieRechtbankCode.ROTTERDAM2,
+    SearchByDatePubType.UITSPRAKEN_FAILLISSEMENT,
+)
 print(res)
-court_list = client.get_court_list()
-print(court_list)
+# court_list = client.get_court_list()
+# print(court_list)
