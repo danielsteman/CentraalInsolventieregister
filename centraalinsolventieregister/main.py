@@ -8,6 +8,11 @@ from suds.sax.attribute import Attribute
 from suds.sax.element import Element
 from suds.wsse import Security, UsernameToken
 
+from generated.rspublic_ws_insolvency_requests import (
+    InstantieRechtbankCode,
+    SearchByDatePubType,
+)
+
 load_dotenv()
 
 
@@ -71,14 +76,16 @@ class CIRClient:
     def get_court_list(self):
         return
 
-    def get_cases_by_date(self, date: str, court: int, pub_type: PubType):
+    def get_cases_by_date(
+        self, date: str, court: InstantieRechtbankCode, pub_type: SearchByDatePubType
+    ):
         """
         Params:
             date: "2024-04-01T00:00:00"
-            court: 41
+            court: "41"
             type: "Uitspraken faillissement"
         """
-        res = client.service.searchByDate(date, court, pub_type)
+        res = client.service.searchByDate(date, court.value, pub_type.value)
         return res
 
     def get_case(self, case_id: str):
