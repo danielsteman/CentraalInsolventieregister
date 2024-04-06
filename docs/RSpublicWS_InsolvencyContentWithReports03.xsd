@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.rechtspraak.nl/namespaces/inspubber01" targetNamespace="http://www.rechtspraak.nl/namespaces/inspubber01" elementFormDefault="qualified" attributeFormDefault="unqualified" version="02.01">
-	<!--A literal translation of legal terms  in insolvency cases carries  - because of differences between national procedures - a risk of misinterpretation.
-To be able to contextualize the terminology in this schema, use can made of the English description of the Dutch insolvency procedures on the website of the European Judicial network in civil and commercial matters ( http://ec.europa.eu/civiljustice/ ).
+	<!--A literal translation of legal terms  in insolvency cases carries  - because of differences between national procedures - a risk of misinterpretation. 
+To be able to contextualize the terminology in this schema, use can made of the English description of the Dutch insolvency procedures on the website of the European Judicial network in civil and commercial matters ( http://ec.europa.eu/civiljustice/ ). 
 To avoid misunderstandings all Dutch terms (in the documentation-elements) have been translated - as fas as possible - using this website. -->
 	<xs:simpleType name="adresHuisnummerBezoekadres">
 		<xs:annotation>
@@ -282,7 +282,7 @@ To avoid misunderstandings all Dutch terms (in the documentation-elements) have 
 	</xs:simpleType>
 	<xs:simpleType name="inspubInstroomLegacy">
 		<xs:annotation>
-			<xs:documentation xml:lang="nl">Indien TRUE dan is de insolventie gestart voor 1 januari 2005 en niet alle publicaties over deze insolventie zijn dan in het register aanwezig. </xs:documentation>
+			<xs:documentation xml:lang="nl">Indien TRUE dan is de insolventie gestart voor 1 januari 2005 en niet alle publicaties over deze insolventie zijn dan in het register aanwezig.</xs:documentation>
 			<xs:documentation xml:lang="en">If TRUE: the insolvency started before 01-01-2005 and not all publications in this case are within this register.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:boolean">
@@ -357,7 +357,7 @@ To avoid misunderstandings all Dutch terms (in the documentation-elements) have 
 	</xs:simpleType>
 	<xs:simpleType name="inspubPublicatiekenmerk">
 		<xs:annotation>
-			<xs:documentation xml:lang="nl">uniek nummer dat wordt toegekend bij publicatie van de bekendmaking. Eerste twee cijfers (optioneel) staan voor het systeemnummer. De eerste drie letters staan voor gerecht, daarna volgt insolventienummer in aangepaste volgorde (jaartal, volgnummer, soort (F = Faillissement, S = surseance = R = schuldsanering)), daarna viercijferige code voor publicatiesoort (zie ook element 'publicatieSoortCode'), een volgnummer voor deze publicatiesoort bij deze insolventie, en ten slotte een tweecijferige code voor het jaartal van publicatie.  </xs:documentation>
+			<xs:documentation xml:lang="nl">uniek nummer dat wordt toegekend bij publicatie van de bekendmaking. Eerste twee cijfers (optioneel) staan voor het systeemnummer. De eerste drie letters staan voor gerecht, daarna volgt insolventienummer in aangepaste volgorde (jaartal, volgnummer, soort (F = Faillissement, S = surseance = R = schuldsanering)), daarna viercijferige code voor publicatiesoort (zie ook element 'publicatieSoortCode'), een volgnummer voor deze publicatiesoort bij deze insolventie, en ten slotte een tweecijferige code voor het jaartal van publicatie.</xs:documentation>
 			<xs:documentation xml:lang="en">Unique identification number which is assigned on publication. The first two numbers (optional) are a systemscode. The first three letters are a court code, followed by  the insolvency number in an adapted sequence (year, serial number, kind of procedure (F = Bankruptcy, S = Mortuarium, R = debt restructuring)), followed by a code for the kind of publication (four digits - see the documentation at 'publicatieSoortCode'), a sequence number for this kind of publication within this insolvency-case and finally a two digit code for the year of publication.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -1386,6 +1386,20 @@ To avoid misunderstandings all Dutch terms (in the documentation-elements) have 
 			<xs:element name="plaats" type="inspubAdresPlaats"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="verslagBeperkt">
+		<xs:sequence>
+			<xs:element name="publicatiedatumVerslag" type="xs:dateTime"/>
+			<xs:element name="kenmerk" type="xs:anyURI"/>
+			<xs:element name="titel" type="xs:string"/>
+			<xs:element name="eindverslag">
+				<xs:simpleType>
+					<xs:restriction base="xs:boolean">
+						<xs:pattern value="true|false"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:element name="inspubWebserviceInsolvente">
 		<xs:annotation>
 			<xs:documentation xml:lang="nl">insolventie</xs:documentation>
@@ -1393,15 +1407,6 @@ To avoid misunderstandings all Dutch terms (in the documentation-elements) have 
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
-				<xs:element name="exceptie">
-					<xs:complexType>
-						<xs:simpleContent>
-							<xs:extension base="xs:string">
-								<xs:attribute name="errorcode" type="exceptieCode" use="required"/>
-							</xs:extension>
-						</xs:simpleContent>
-					</xs:complexType>
-				</xs:element>
 				<xs:element name="insolvente">
 					<xs:complexType>
 						<xs:sequence>
@@ -1458,8 +1463,24 @@ To avoid misunderstandings all Dutch terms (in the documentation-elements) have 
 							</xs:element>
 							<xs:element name="cbvers" type="inspubCbvers" minOccurs="0"/>
 							<xs:element name="publicatiegeschiedenis" type="inspubPublicatiegeschiedenis"/>
+							<xs:element name="beschikbareVerslagen" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="verslag" type="verslagBeperkt" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
 							<xs:element name="eindeVindbaarheid" type="inspubEindeVindbaarheid" minOccurs="0"/>
 						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="exceptie">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="errorcode" type="exceptieCode" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
 					</xs:complexType>
 				</xs:element>
 			</xs:choice>
