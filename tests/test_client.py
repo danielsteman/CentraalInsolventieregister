@@ -26,5 +26,4 @@ def test_get_kvk():
     case_id = "10.rot.23.279.F.1313.1.24"
     client = CIRClient()
     kvk = client.get_case_kvk(case_id)
-    print(kvk)
-    assert False
+    assert kvk > 0

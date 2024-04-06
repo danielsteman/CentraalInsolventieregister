@@ -120,7 +120,8 @@ class CIRClient:
         case = case.insolvente
 
         try:
-            return case.insolvente.handelendOnderDeNamen.handelendOnderDeNaam
+            kvk = case.handelendOnderDeNamen.handelendOnderDeNaam.KvKNummer
+            return int(kvk)
         except AttributeError as e:
             print(e)
             return None
