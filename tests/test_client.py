@@ -27,3 +27,4 @@ def test_get_kvk():
     client = CIRClient()
     kvk = client.get_case_kvk(case_id)
     print(kvk)
+    assert False
