@@ -8,6 +8,9 @@ from suds.sax.attribute import Attribute
 from suds.sax.element import Element
 from suds.wsse import Security, UsernameToken
 
+from centraalinsolventieregister.rspublic_ws_insolvency_content_with_reports03 import (
+    InspubWebserviceInsolvente,
+)
 from centraalinsolventieregister.rspublic_ws_insolvency_requests import (
     InstantieRechtbankCode,
     SearchByDatePubType,
@@ -82,12 +85,6 @@ class CIRClient:
     def get_cases_by_date(
         self, date: str, court: InstantieRechtbankCode, pub_type: SearchByDatePubType
     ) -> PublicatieLijst:
-        """
-        Params:
-            date: "2024-04-01T00:00:00"
-            court: "41"
-            type: "Uitspraken faillissement"
-        """
         res = self.client.service.searchByDate(date, court.value, pub_type.value)
         res = res.publicatieLijst
         try:
@@ -106,10 +103,24 @@ class CIRClient:
         )
         return publication_list
 
-    def get_case(self, case_id: str):
-        """
-        Params:
-            case_id: "15.nho.24.94.F.1300.1.24"
-        """
+    def get_case(self, case_id: str) -> InspubWebserviceInsolvente:
         res = self.client.service.getCase(case_id)
-        return res
+        res = res.inspubWebserviceInsolvente
+
+        try:
+            exception = res.exceptie.value
+            return InspubWebserviceInsolvente(exceptie=exception)
+        except AttributeError:
+            exception = None
+
+        return InspubWebserviceInsolvente(insolvente=res.insolvente)
+
+    def get_case_kvk(self, case_id: str) -> int | None:
+        case = self.get_case(case_id)
+        case = case.insolvente
+
+        try:
+            return case.insolvente.handelendOnderDeNamen.handelendOnderDeNaam
+        except AttributeError as e:
+            print(e)
+            return None
