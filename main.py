@@ -1,20 +1,21 @@
 from suds.client import Client
 from suds.wsse import Security, UsernameToken
-import configparser
 from suds.sax.element import Element
 from suds.sax.attribute import Attribute
 import uuid
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 WEBSERVICE_URL = "http://webservice.rechtspraak.nl/cir.asmx?wsdl"
 NS_WSA = ("wsa", "http://schemas.xmlsoap.org/ws/2004/08/addressing")
 MUST_UNDERSTAND = Attribute("SOAP-ENV:mustUnderstand", "true")
 
-Config = configparser.ConfigParser()
-Config.read("credentials.ini")
 
-USERNAME = Config.get("Login", "Username")
-PASSWORD = Config.get("Login", "Password")
+USERNAME = os.environ["USERNAME"]
+PASSWORD = os.environ["PASSWORD"]
 
 
 class CIRClient:
@@ -67,6 +68,8 @@ class CIRClient:
 
 
 client = CIRClient()
+res = client.ping()
+print(res)
 court_list = client.get_court_list()
 print(court_list)
 

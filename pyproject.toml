@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "centraalinsolventieregister"
+version = "0.1.0"
+description = ""
+authors = ["Daniel Steman <daniel-steman@live.nl>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+jedi = "^0.19.1"
+parso = "^0.8.4"
+suds-py3 = "^1.4.5.0"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
